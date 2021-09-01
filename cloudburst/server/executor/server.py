@@ -88,14 +88,17 @@ def executor(ip, mgmt_ip, schedulers, thread_id):
     poller.register(dag_exec_socket, zmq.POLLIN)
     poller.register(self_depart_socket, zmq.POLLIN)
 
+    client = AnnaIpcClient(thread_id, context)
+    local = False
+
     # If the management IP is set to None, that means that we are running in
     # local mode, so we use a regular AnnaTcpClient rather than an IPC client.
-    if mgmt_ip:
-        client = AnnaIpcClient(thread_id, context)
-        local = False
-    else:
-        client = AnnaTcpClient('127.0.0.1', '127.0.0.1', local=True, offset=1)
-        local = True
+    # if mgmt_ip:
+    #     client = AnnaIpcClient(thread_id, context)
+    #     local = False
+    # else:
+    #     client = AnnaTcpClient('127.0.0.1', '127.0.0.1', local=True, offset=1)
+    #     local = True
 
     user_library = CloudburstUserLibrary(context, pusher_cache, ip, thread_id,
                                       client)

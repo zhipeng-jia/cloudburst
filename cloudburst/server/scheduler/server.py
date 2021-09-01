@@ -68,7 +68,8 @@ logging.basicConfig(filename='log_scheduler.txt', level=logging.INFO,
 def scheduler(ip, mgmt_ip, route_addr, policy_type):
 
     # If the management IP is not set, we are running in local mode.
-    local = (mgmt_ip is None)
+    # local = (mgmt_ip is None)
+    local = False
     kvs = AnnaTcpClient(route_addr, ip, local=local)
 
     scheduler_id = str(uuid.uuid4())
@@ -130,7 +131,7 @@ def scheduler(ip, mgmt_ip, route_addr, policy_type):
     continuation_socket.bind(sutils.BIND_ADDR_TEMPLATE %
                              (sutils.CONTINUATION_PORT))
 
-    if not local:
+    if mgmt_ip:
         management_request_socket = context.socket(zmq.REQ)
         management_request_socket.setsockopt(zmq.RCVTIMEO, 500)
         # By setting this flag, zmq matches replies with requests.
@@ -282,7 +283,7 @@ def scheduler(ip, mgmt_ip, route_addr, policy_type):
             # If the management IP is None, that means we arre running in
             # local mode, so there is no need to deal with caches and other
             # schedulers.
-            if not local:
+            if mgmt_ip:
                 latest_schedulers = sched_utils.get_ip_set(management_request_socket, False)
                 if latest_schedulers:
                     schedulers = latest_schedulers
