@@ -13,6 +13,7 @@
 #  limitations under the License.
 
 import logging
+import os
 import sys
 import time
 import zmq
@@ -24,14 +25,12 @@ from cloudburst.server.benchmarks import utils
 logging.basicConfig(filename='log_trigger.txt', level=logging.INFO,
                     format='%(asctime)s %(message)s')
 
-NUM_THREADS = 4
+NUM_THREADS = int(os.environ['BENCH_THREADS'])
 
+BENCH_IPS = os.environ['BENCH_IPS']
 ips = []
-with open('bench_ips.txt', 'r') as f:
-    line = f.readline()
-    while line:
-        ips.append(line.strip())
-        line = f.readline()
+for entry in BENCH_IPS.split():
+    ips.append(entry.strip())
 
 msg = sys.argv[1]
 ctx = zmq.Context(1)
