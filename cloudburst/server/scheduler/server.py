@@ -61,7 +61,7 @@ from cloudburst.shared.utils import (
 METADATA_THRESHOLD = 5
 REPORT_THRESHOLD = 5
 
-logging.basicConfig(filename='log_scheduler.txt', level=logging.INFO,
+logging.basicConfig(filename='/tmp/log/scheduler.log', level=logging.INFO,
                     format='%(asctime)s %(message)s')
 
 
